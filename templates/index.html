@@ -5,6 +5,16 @@
     <title>Flask Chat App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        :root {
+            --primary: #4caf50;
+            --background: #f1f2f6;
+            --chat-bg: #ffffff;
+            --header-bg: #2f3640;
+            --user-msg-bg: #d4edda;
+            --bot-msg-bg: #f1f0f0;
+            --text: #333;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,27 +23,29 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right, #dce35b, #45b649);
-            color: #333;
+            background-color: var(--background);
+            color: var(--text);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
         header {
-            background-color: #2f3640;
-            padding: 1rem 2rem;
+            background-color: var(--header-bg);
             color: #fff;
-            text-align: center;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        nav {
-            margin-top: 0.5rem;
+        header h2 {
+            font-size: 1.5rem;
         }
 
         nav a {
             color: #bce907;
-            margin: 0 1rem;
+            margin-left: 1rem;
             text-decoration: none;
             font-weight: bold;
         }
@@ -47,72 +59,92 @@
 
         .chat-container {
             width: 100%;
-            max-width: 600px;
-            background-color: #ffffffcc;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            max-width: 700px;
+            background: var(--chat-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 1rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
         .messages {
-            flex-grow: 1;
-            height: 400px;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            flex: 1;
             padding: 1rem;
-            background-color: #f9f9f9;
-            margin-bottom: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            background: #fafafa;
         }
 
         .message {
-            margin-bottom: 0.8rem;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            max-width: 80%;
+            word-wrap: break-word;
+            font-size: 0.95rem;
+            line-height: 1.4;
         }
 
         .message.user {
-            text-align: right;
-            color: #4caf50;
+            align-self: flex-end;
+            background-color: var(--user-msg-bg);
         }
 
         .message.bot {
-            text-align: left;
-            color: #333;
+            align-self: flex-start;
+            background-color: var(--bot-msg-bg);
         }
 
         form {
             display: flex;
+            border-top: 1px solid #ddd;
         }
 
         input[type="text"] {
             flex-grow: 1;
-            padding: 0.8rem;
-            border: 1px solid #ccc;
-            border-radius: 8px 0 0 8px;
+            padding: 1rem;
+            border: none;
             font-size: 1rem;
+            border-radius: 0;
+            outline: none;
         }
 
         button {
-            padding: 0.8rem 1.2rem;
-            background-color: #4caf50;
+            padding: 0 1.5rem;
+            background-color: var(--primary);
             color: white;
             border: none;
-            border-radius: 0 8px 8px 0;
             font-size: 1rem;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: #388e3c;
+            background-color: #3d8b42;
         }
 
         footer {
             text-align: center;
             padding: 1rem;
-            background-color: #2f3640;
+            background-color: var(--header-bg);
             color: white;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .chat-container {
+                margin: 0 1rem;
+            }
         }
     </style>
 </head>
@@ -121,21 +153,19 @@
         <h2>Flask Chat App</h2>
         <nav>
             <a href="#">Home</a>
-            <a href="#">Features</a>
+            <a href="#">Docs</a>
             <a href="#">Contact</a>
         </nav>
     </header>
 
     <main>
         <div class="chat-container">
+            <div class="chat-header">Live Chat</div>
             <div class="messages" id="chat-box">
-                <!-- Example messages -->
-                <div class="message bot">Hi there! How can I help you?</div>
-                <div class="message user">What's the weather like today?</div>
+                <div class="message bot">👋 Hello! How can I assist you today?</div>
             </div>
-
             <form id="chat-form" onsubmit="sendMessage(event)">
-                <input type="text" id="user-input" placeholder="Type a message..." required>
+                <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off" required />
                 <button type="submit">Send</button>
             </form>
         </div>
@@ -150,25 +180,23 @@
             event.preventDefault();
             const input = document.getElementById('user-input');
             const message = input.value.trim();
-            if (message) {
-                const chatBox = document.getElementById('chat-box');
+            const chatBox = document.getElementById('chat-box');
 
-                // Add user message
-                const userMsg = document.createElement('div');
-                userMsg.className = 'message user';
-                userMsg.textContent = message;
-                chatBox.appendChild(userMsg);
+            if (message !== '') {
+                // User message
+                const userDiv = document.createElement('div');
+                userDiv.className = 'message user';
+                userDiv.textContent = message;
+                chatBox.appendChild(userDiv);
 
-                // Placeholder bot response
-                const botMsg = document.createElement('div');
-                botMsg.className = 'message bot';
-                botMsg.textContent = "You said: " + message;
-                chatBox.appendChild(botMsg);
-
-                // Scroll to bottom
-                chatBox.scrollTop = chatBox.scrollHeight;
+                // Simulated bot reply
+                const botDiv = document.createElement('div');
+                botDiv.className = 'message bot';
+                botDiv.textContent = "🤖 You said: " + message;
+                chatBox.appendChild(botDiv);
 
                 input.value = '';
+                chatBox.scrollTop = chatBox.scrollHeight;
             }
         }
     </script>
