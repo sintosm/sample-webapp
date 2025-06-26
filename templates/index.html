@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Flask Docker App</title>
+    <title>Flask Chat App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * {
@@ -41,42 +41,70 @@
         main {
             flex: 1;
             display: flex;
-            align-items: center;
             justify-content: center;
             padding: 2rem;
         }
 
-        .container {
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
             background-color: #ffffffcc;
-            padding: 2rem 3rem;
+            padding: 2rem;
             border-radius: 12px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            text-align: center;
+            display: flex;
+            flex-direction: column;
         }
 
-        h1 {
-            font-size: 2.5rem;
-            color: #4caf50;
+        .messages {
+            flex-grow: 1;
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            background-color: #f9f9f9;
             margin-bottom: 1rem;
         }
 
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
+        .message {
+            margin-bottom: 0.8rem;
         }
 
-        .button {
-            padding: 0.8rem 1.5rem;
+        .message.user {
+            text-align: right;
+            color: #4caf50;
+        }
+
+        .message.bot {
+            text-align: left;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 8px 0 0 8px;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 0.8rem 1.2rem;
             background-color: #4caf50;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 0 8px 8px 0;
             font-size: 1rem;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
-        .button:hover {
+        button:hover {
             background-color: #388e3c;
         }
 
@@ -90,7 +118,7 @@
 </head>
 <body>
     <header>
-        <h2>Flask Docker App</h2>
+        <h2>Flask Chat App</h2>
         <nav>
             <a href="#">Home</a>
             <a href="#">Features</a>
@@ -99,15 +127,50 @@
     </header>
 
     <main>
-        <div class="container">
-            <h1>🚀 Welcome to Your Flask App in Docker!</h1>
-            <p>This is a fully Dockerized web app running on Flask, styled with a clean UI.</p>
-            <button class="button" onclick="alert('Thanks for clicking!')">Click Me</button>
+        <div class="chat-container">
+            <div class="messages" id="chat-box">
+                <!-- Example messages -->
+                <div class="message bot">Hi there! How can I help you?</div>
+                <div class="message user">What's the weather like today?</div>
+            </div>
+
+            <form id="chat-form" onsubmit="sendMessage(event)">
+                <input type="text" id="user-input" placeholder="Type a message..." required>
+                <button type="submit">Send</button>
+            </form>
         </div>
     </main>
 
     <footer>
-        &copy; 2025 Flask Docker App. All rights reserved.
+        &copy; 2025 Flask Chat App. All rights reserved.
     </footer>
+
+    <script>
+        function sendMessage(event) {
+            event.preventDefault();
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            if (message) {
+                const chatBox = document.getElementById('chat-box');
+
+                // Add user message
+                const userMsg = document.createElement('div');
+                userMsg.className = 'message user';
+                userMsg.textContent = message;
+                chatBox.appendChild(userMsg);
+
+                // Placeholder bot response
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot';
+                botMsg.textContent = "You said: " + message;
+                chatBox.appendChild(botMsg);
+
+                // Scroll to bottom
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                input.value = '';
+            }
+        }
+    </script>
 </body>
 </html>
