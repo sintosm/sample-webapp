@@ -55,6 +55,8 @@ jobs:
             flask-webapp=${{ secrets.DOCKERHUB_USERNAME }}/flask-webapp:${{ github.event.inputs.tag }} \
             --namespace=test
 
-      - name: Wait for rollout to complete
+      - name: Force rollout
         run: |
+          kubectl patch deployment flask-webapp -n test -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"updated\":\"$(date +%s)\"}}}}}"
+          kubectl -n test rollout restart deployment flask-webapp
           kubectl rollout status deployment/flask-webapp --namespace=test
