@@ -6,13 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
-      --primary-color: #4caf50;
-      --bg-color: #f5f7fa;
-      --chat-bg: #ffffff;
-      --user-msg-bg: #e8f5e9;
-      --bot-msg-bg: #eceff1;
-      --text-color: #333;
-      --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --primary-color: #e50914;
+      --background-color: #141414;
+      --chat-bg: #1c1c1c;
+      --text-color: #ffffff;
+      --bot-msg-bg: #333;
+      --user-msg-bg: #e50914;
+      --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
 
     * {
@@ -24,176 +24,167 @@
     html, body {
       height: 100%;
       font-family: var(--font);
-      background: var(--bg-color);
+      background-color: var(--background-color);
       color: var(--text-color);
     }
 
-    body {
-      display: flex;
-      flex-direction: column;
-    }
-
     header {
-      background-color: #2f3640;
+      background-color: var(--background-color);
       padding: 1rem 2rem;
-      color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 1.2rem;
+      border-bottom: 1px solid #333;
+    }
+
+    header h1 {
+      color: var(--primary-color);
+      font-size: 1.8rem;
     }
 
     nav a {
-      color: #bce907;
-      margin-left: 1rem;
+      color: #fff;
+      margin-left: 1.5rem;
       text-decoration: none;
+      font-weight: bold;
+      transition: color 0.2s;
     }
 
-    .chat-wrapper {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
+    nav a:hover {
+      color: var(--primary-color);
     }
 
     .chat-container {
-      width: 100%;
-      max-width: 700px;
-      height: 90vh;
-      background: var(--chat-bg);
       display: flex;
       flex-direction: column;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      height: calc(100vh - 120px);
+      max-width: 800px;
+      margin: auto;
+      background-color: var(--chat-bg);
+      border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
     }
 
     .chat-header {
-      background-color: var(--primary-color);
-      color: white;
       padding: 1rem;
-      font-weight: bold;
+      background-color: #000;
       text-align: center;
       font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--primary-color);
     }
 
     .chat-messages {
       flex: 1;
-      padding: 1rem;
+      padding: 1.5rem;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
-      background-color: #fafafa;
+      gap: 1rem;
+      background-color: #181818;
     }
 
     .message {
-      max-width: 75%;
-      padding: 0.8rem 1rem;
+      max-width: 70%;
+      padding: 1rem;
       border-radius: 12px;
-      line-height: 1.4;
       font-size: 1rem;
-      word-break: break-word;
+      line-height: 1.4;
       animation: fadeIn 0.2s ease-in-out;
-    }
-
-    .message.user {
-      background-color: var(--user-msg-bg);
-      align-self: flex-end;
-      border-bottom-right-radius: 0;
+      word-break: break-word;
     }
 
     .message.bot {
       background-color: var(--bot-msg-bg);
       align-self: flex-start;
-      border-bottom-left-radius: 0;
+    }
+
+    .message.user {
+      background-color: var(--user-msg-bg);
+      align-self: flex-end;
+      color: #fff;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(5px); }
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .chat-input-area {
+    .chat-input {
       display: flex;
-      border-top: 1px solid #ddd;
-      background: white;
-      padding: 0.75rem 1rem;
+      padding: 1rem;
+      background-color: #000;
+      border-top: 1px solid #333;
     }
 
-    .chat-input-area input {
+    .chat-input input {
       flex: 1;
-      padding: 0.75rem 1rem;
-      border: none;
-      border-radius: 8px;
+      padding: 0.8rem 1rem;
       font-size: 1rem;
-      background-color: #f0f0f0;
+      border: none;
+      border-radius: 6px;
       outline: none;
-      transition: box-shadow 0.2s ease;
+      background-color: #333;
+      color: white;
     }
 
-    .chat-input-area input:focus {
-      box-shadow: 0 0 0 2px var(--primary-color);
-    }
-
-    .chat-input-area button {
-      margin-left: 0.75rem;
-      padding: 0.75rem 1.5rem;
+    .chat-input button {
       background-color: var(--primary-color);
       border: none;
-      border-radius: 8px;
+      padding: 0.8rem 1.5rem;
+      margin-left: 1rem;
+      border-radius: 6px;
       color: white;
       font-size: 1rem;
       cursor: pointer;
-      transition: background-color 0.2s ease;
+      transition: background 0.3s;
     }
 
-    .chat-input-area button:hover {
-      background-color: #3d8b42;
+    .chat-input button:hover {
+      background-color: #b20710;
     }
 
     footer {
       text-align: center;
       padding: 1rem;
-      background-color: #2f3640;
-      color: white;
+      background-color: var(--background-color);
+      color: #aaa;
       font-size: 0.9rem;
     }
 
     @media (max-width: 600px) {
       .chat-container {
-        height: 100vh;
         border-radius: 0;
+        height: 100vh;
       }
     }
   </style>
 </head>
 <body>
+
   <header>
-    <div>Flask Chat App</div>
+    <h1>Chatflix</h1>
     <nav>
       <a href="#">Home</a>
-      <a href="#">API</a>
-      <a href="#">About</a>
+      <a href="#">Chat</a>
+      <a href="#">Support</a>
     </nav>
   </header>
 
-  <div class="chat-wrapper">
-    <div class="chat-container">
-      <div class="chat-header">💬 Let's Chat</div>
-      <div class="chat-messages" id="chat-box">
-        <div class="message bot">Hello 👋, how can I assist you today?</div>
-      </div>
-      <form class="chat-input-area" id="chat-form" onsubmit="sendMessage(event)">
-        <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off" required />
-        <button type="submit">Send</button>
-      </form>
+  <div class="chat-container">
+    <div class="chat-header">Live Support Chat</div>
+    <div class="chat-messages" id="chat-box">
+      <div class="message bot">👋 Hi there! Need help with something?</div>
     </div>
+    <form class="chat-input" id="chat-form" onsubmit="sendMessage(event)">
+      <input type="text" id="user-input" placeholder="Type your message..." required />
+      <button type="submit">Send</button>
+    </form>
   </div>
 
   <footer>
-    &copy; 2025 Flask Chat App. All rights reserved.
+    &copy; 2025 Chatflix, Inc. All rights reserved.
   </footer>
 
   <script>
@@ -204,24 +195,25 @@
       const chatBox = document.getElementById('chat-box');
 
       if (message) {
-        // Add user message
+        // User message
         const userMsg = document.createElement('div');
         userMsg.className = 'message user';
         userMsg.textContent = message;
         chatBox.appendChild(userMsg);
 
-        // Simulated bot response
+        // Simulated bot reply
         const botMsg = document.createElement('div');
         botMsg.className = 'message bot';
         botMsg.textContent = "🤖 You said: " + message;
         chatBox.appendChild(botMsg);
 
-        // Auto-scroll
+        // Scroll to latest
         chatBox.scrollTop = chatBox.scrollHeight;
 
         input.value = '';
       }
     }
   </script>
+
 </body>
 </html>
